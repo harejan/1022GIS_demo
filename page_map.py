@@ -7,6 +7,7 @@ st.title("Leafmap + GeoPandas 示範")
 
 # --- 1. 載入 GeoPandas 資料 ---
 # 載入 Natural Earth 110m 國家邊界資料 (.zip 格式)
+m.add_layer_control() 
 url = "https://naciscdn.org/naturalearth/110m/cultural/ne_110m_admin_0_countries.zip"
 
 # GeoPandas 直接從 URL 讀取 .zip 檔案中的 Shapefile
