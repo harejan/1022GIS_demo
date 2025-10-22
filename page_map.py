@@ -10,9 +10,9 @@ st.title("Leafmap + GeoPandas 示範 (含底圖切換)")
 # --- 2. 側邊欄：底圖選擇 (新增功能) ---
 # 定義底圖選項，這些是 leafmap/folium 支援的名稱
 BASEMAP_OPTIONS = {
-    "地形圖 (OpenTopoMap)": "OpenTopoMap",
-    "衛星影像 (Esri)": "Esri.WorldImagery",
-    "暗色主題 (CartoDB)": "CartoDB.DarkMatter",
+    "OpenTopoMap⛰️": "OpenTopoMap",
+    "Esri🛰️": "Esri.WorldImagery",
+    "CartoDB🖤": "CartoDB.DarkMatter",
 }
 
 st.sidebar.header("地圖設定")
