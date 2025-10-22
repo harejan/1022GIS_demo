@@ -1,30 +1,38 @@
 import streamlit as st
 import leafmap.foliumap as leafmap
-import geopandas as gpd # / GeoPandas
+import geopandas as gpd 
+
 st.set_page_config(layout="wide")
-st.title("Leafmap + GeoPandas (Uß)")
-# --- 1. o GeoPandas × ---
-# o Natural Earth 110m cultural vectors ö .zip þ
-url =
-"https://naciscdn.org/naturalearth/110m/cultural/ne_110m_admin_0_countries.zi
-p"
-# GeoPandas ÿïß URL × .zip þ
+st.title("Leafmap + GeoPandas 示範")
+
+# --- 1. 載入 GeoPandas 資料 ---
+# 載入 Natural Earth 110m 國家邊界資料 (.zip 格式)
+url = "https://naciscdn.org/naturalearth/110m/cultural/ne_110m_admin_0_countries.zip"
+
+# GeoPandas 直接從 URL 讀取 .zip 檔案中的 Shapefile
 gdf = gpd.read_file(url)
-# (o) ovrß
+
+# (可選) 顯示 GeoDataFrame 的前幾行資料
+st.subheader("GeoDataFrame 資料預覽")
 st.dataframe(gdf.head())
-# --- 2. W ---
-m = leafmap.Map(center=[0, 0])
-# --- 3.  GeoDataFrame à/W ---
-# o add_gdf()
+
+# --- 2. 初始化地圖 ---
+# 建立一個以 (0, 0) 為中心的世界地圖
+m = leafmap.Map(center=[0, 0], zoom=1) 
+
+# --- 3. 將 GeoDataFrame 加入地圖 ---
+# 使用 add_gdf() 方法將 GeoDataFrame (gdf) 加入 Leafmap 地圖
 m.add_gdf(
- gdf,
- layer_name="_} (Vector)",
- style={"fillOpacity": 0, "color": "black", "weight": 0.5}, # ún}
- # highlight=False ößoÿ
- # n<\=¿o/ó(Tooltip)öù
- highlight=False
+    gdf,
+    layer_name="國家邊界 (Vector)",
+    # 設定邊界樣式：內部透明度 0，邊框黑色，線寬 0.5
+    style={"fillOpacity": 0, "color": "black", "weight": 0.5},
+    # 停用滑鼠懸停高亮效果
+    highlight=False
 )
-# à/Wv (óN¿)
+
+# 加入圖層控制面板，讓使用者可以開關 GeoDataFrame 圖層
 m.add_layer_control()
-# --- 4. W ---
+
+# --- 4. 渲染地圖至 Streamlit ---
 m.to_streamlit(height=700)
