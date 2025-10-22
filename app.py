@@ -3,8 +3,8 @@ import streamlit as st
 # ÿst.Page() ¯×~ .py þ
 # Emoji Wÿhttps://tw.piliapp.com/emoji/list/
 pages = [
- st.Page("page_home.py", title="關於我", icon="🙄💅"),
- st.Page("page_map.py", title="互動地圖瀏覽", icon="😺"),
+ st.Page("page_home.py", title="關於我", icon="💅"),
+ st.Page("page_map.py", title="互動地圖瀏覽", icon="🗺️"),
  st.Page("page_about.py", title="關於我們", icon="😠")
 ]
 # 2. o st.navigation() ½ (Ït)
