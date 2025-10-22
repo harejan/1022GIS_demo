@@ -60,7 +60,7 @@ m = leafmap.Map(
 m.add_gdf(
     gdf,
     layer_name="國家邊界 (Vector)",
-    style={"fillOpacity": 0, "color": "red", "weight": 1.0}, # 顏色改為紅色，更醒目
+    style={"fillOpacity": 0, "color": "blue", "weight": 1.0}, # 顏色改為紅色，更醒目
     highlight=False
 )
 
