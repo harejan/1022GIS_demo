@@ -2,37 +2,61 @@ import streamlit as st
 import leafmap.foliumap as leafmap
 import geopandas as gpd 
 
+# --- 1. 頁面配置 ---
 st.set_page_config(layout="wide")
-st.title("Leafmap + GeoPandas 示範")
+st.title("Leafmap + GeoPandas 示範 (含底圖切換)")
 
-# --- 1. 載入 GeoPandas 資料 ---
-# 載入 Natural Earth 110m 國家邊界資料 (.zip 格式)
+
+# --- 2. 側邊欄：底圖選擇 (新增功能) ---
+# 定義底圖選項，這些是 leafmap/folium 支援的名稱
+BASEMAP_OPTIONS = {
+    "地形圖 (OpenTopoMap)": "OpenTopoMap",
+    "衛星影像 (Esri)": "Esri.WorldImagery",
+    "暗色主題 (CartoDB)": "CartoDB.DarkMatter",
+}
+
+st.sidebar.header("地圖設定")
+# 使用 st.selectbox 讓使用者選擇底圖名稱
+selected_name = st.sidebar.selectbox(
+    "選擇底圖 (Basemap)",
+    list(BASEMAP_OPTIONS.keys())
+)
+
+# 根據選擇的名稱獲取實際的底圖代碼
+selected_basemap_code = BASEMAP_OPTIONS[selected_name]
+
+
+# --- 3. 載入 GeoPandas 資料 (保持不變) ---
 url = "https://naciscdn.org/naturalearth/110m/cultural/ne_110m_admin_0_countries.zip"
+# 由於資料較大，建議使用 Streamlit 的快取來避免每次重載
+@st.cache_data
+def load_data(data_url):
+    return gpd.read_file(data_url)
 
-# GeoPandas 直接從 URL 讀取 .zip 檔案中的 Shapefile
-gdf = gpd.read_file(url)
+gdf = load_data(url)
 
-# (可選) 顯示 GeoDataFrame 的前幾行資料
 st.subheader("GeoDataFrame 資料預覽")
 st.dataframe(gdf.head())
 
-# --- 2. 初始化地圖 ---
-# 建立一個以 (0, 0) 為中心的世界地圖
-m = leafmap.Map(center=[0, 0], zoom=1) 
 
-# --- 3. 將 GeoDataFrame 加入地圖 ---
-# 使用 add_gdf() 方法將 GeoDataFrame (gdf) 加入 Leafmap 地圖
+# --- 4. 初始化地圖 (將選擇的底圖應用於此處) ---
+m = leafmap.Map(
+    center=[0, 0], 
+    zoom=1,
+    # 關鍵：使用使用者在側邊欄選擇的底圖
+    tiles=selected_basemap_code 
+) 
+
+# --- 5. 將 GeoDataFrame 加入地圖 ---
 m.add_gdf(
     gdf,
     layer_name="國家邊界 (Vector)",
-    # 設定邊界樣式：內部透明度 0，邊框黑色，線寬 0.5
     style={"fillOpacity": 0, "color": "black", "weight": 0.5},
-    # 停用滑鼠懸停高亮效果
     highlight=False
 )
 
-# 加入圖層控制面板，讓使用者可以開關 GeoDataFrame 圖層
+# 加入圖層控制面板
 m.add_layer_control()
 
-# --- 4. 渲染地圖至 Streamlit ---
+# --- 6. 渲染地圖至 Streamlit ---
 m.to_streamlit(height=700)
